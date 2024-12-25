@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .bar-container {
+            width: 50px;
+            height: 200px;
+            background-color: lightgrey;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .bar-progress {
+            background-color: blue;
+            transition: height 1s;
+            transition-timing-function: linear;
+        }
+    </style>
+</head>
+<body>
+    <p id="current-action">Breathing exercise</p>
+    <div class="bar-container">
+        <div id="progression" class="bar-progress"></div>
+    </div>
+
+    <button onclick="doExercise('s748')">Start 748</button>
+    <button onclick="doExercise('s55')">Start 55</button>
+    <button onclick="doExercise('s46')">Start 46</button>
+
+    <script>
+        
+        // Times are in seconds unit
+        const modes = {
+            s748: {
+                inspirationTime: 7,
+                apneaTime: 4,
+                exhalationTime: 8
+            },
+            s55: {
+                inspirationTime: 5,
+                apneaTime: 0,
+                exhalationTime: 5
+            },
+            s46: {
+                inspirationTime: 4,
+                apneaTime: 0,
+                exhalationTime: 6
+            }
+        }
+
+        function doExercise(solution) {
+            // Selecting solution
+            let mode = modes[solution];
+            // DOM element declaration
+            let currentAction = document.getElementById("current-action");
+            let progressBar = document.getElementById("progression");
+            // Set default height
+            let height = 1;
+            // Set frames interval
+            let inspirationFrameId = setInterval(doInspiration, 1000);
+            let exhalationFrameId;
+
+            // doInspiration method
+            function doInspiration() {
+                // Update currentAction text for user experience
+                currentAction.innerText = "Breathe in";
+                // Stop condition and call to doApnea() method
+                if (height >= 100) {
+                clearInterval(inspirationFrameId);
+                doApnea();
+                } else {
+                    // Increase height
+                    height += (100 / mode.inspirationTime);
+                    // Apply height update on HTML element
+                    progressBar.style.height = height + '%';
+                }
+            }
+
+            // doApnea method
+            function doApnea() {
+                // Update currentAction text for user experience
+                currentAction.innerText = "Stay apnea";
+                // Call doExhalation() after apnea delay
+                setTimeout(function () {
+                        // Reset height to strictly 100 %
+                        height = 100;
+                        // Call doExhalation() method
+                        exhalationFrameId = setInterval(doExhalation, 1000);
+                    }
+                    , 1000 * mode.apneaTime
+                );
+            }
+
+            // doExhalation method
+            function doExhalation() {
+                // Update currentAction text for user experience
+                currentAction.innerText = "Breathe out";
+                if (height <= 0) {
+                // Update currentAction text for user experience
+                currentAction.innerText = "Exercise finished";    
+                clearInterval(exhalationFrameId);
+                } else {
+                    // Decrease height
+                    height -= (100 / mode.exhalationTime)
+                    // Apply height update on HTML element
+                    progressBar.style.height = height + '%';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
