@@ -30,7 +30,7 @@
     <button onclick="doExercise('s46')">Start 46</button>
 
     <script>
-        
+
         // Times are in seconds unit
         const modes = {
             s748: {
@@ -97,13 +97,20 @@
             function doExhalation() {
                 // Update currentAction text for user experience
                 currentAction.innerText = "Breathe out";
+
                 if (height <= 0) {
-                // Update currentAction text for user experience
-                currentAction.innerText = "Exercise finished";    
-                clearInterval(exhalationFrameId);
+                    // Update currentAction text for user experience
+                    currentAction.innerText = "Exercise finished";
+                    clearInterval(exhalationFrameId);
                 } else {
-                    // Decrease height
-                    height -= (100 / mode.exhalationTime)
+                    // If current height - next height < 0 we set height = 0
+                    if (height - (100 / mode.exhalationTime) < 0) {
+                        height = 0
+                    } else {
+                        // Else decrease height
+                        height -= (100 / mode.exhalationTime)
+                    }
+
                     // Apply height update on HTML element
                     progressBar.style.height = height + '%';
                 }
