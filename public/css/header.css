@@ -1,0 +1,81 @@
+.main-header {
+    padding: 32px 0 0;
+    width: 100%;
+}
+
+.header-content {
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 100px;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    font-family: "Filson Pro", sans-serif;
+}
+
+.nav-link {
+    color: #001C6D;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-right: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.nav-btn {
+    background: #001C6D;
+    color: #fff;
+    padding: 10px 28px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    border: none;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    background: #001489;
+}
+
+@media (max-width: 700px) {
+    .header-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .logo-title {
+        justify-content: center;
+        width: 300px;
+    }
+
+    .header-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .nav-link,
+    .nav-btn {
+        max-width: 320px;
+        text-align: center;
+        margin: 0;
+    }
+}

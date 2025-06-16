@@ -1,0 +1,304 @@
+
+    :root {
+      --blue: #0a1a9c;
+      --blue-light: #aee0fd;
+      --blue-dark: #000b6b;
+    }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #fff;
+      color: var(--blue);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* HEADER */
+    .main-header {
+      padding: 32px 0 0;
+      width: 100%;
+  }
+  
+  .header-content {
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 24px;
+  }
+    .logo-title img {
+      height: 56px;
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-link {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: background 0.2s;
+    }
+    .nav-link.active, .nav-link:focus {
+      border-bottom: 3px solid var(--blue);
+      font-weight: 700;
+    }
+    .nav-btn {
+      background: var(--blue);
+      color: #fff;
+      padding: 10px 28px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .nav-btn:hover {
+      background: var(--blue-dark);
+    }
+    /* FORMULAIRE */
+    .register-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 60vh;
+      margin-top: 32px;
+      margin-bottom: 32px;
+    }
+    .register-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 4px 32px #e6f2ff;
+      max-width: 420px;
+      width: 100%;
+      padding: 40px 32px 32px 32px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .register-title-row {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+    .register-switch {
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+    }
+    .register-switch a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.2rem;
+      padding: 0 8px 4px 8px;
+      border-bottom: 3px solid transparent;
+      transition: border 0.2s, color 0.2s;
+    }
+    .register-switch a.active {
+      border-bottom: 3px solid var(--blue);
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .register-switch a:not(.active):hover {
+      color: var(--blue-dark);
+    }
+    form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    label {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: var(--blue);
+      display: block;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #b2c2e0;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: #f7f8fd;
+      color: var(--blue);
+      transition: border 0.2s;
+      outline: none;
+      margin-bottom: 4px;
+    }
+    input:focus {
+      border-color: var(--blue);
+      background: #f0f6ff;
+    }
+    .input-row {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+    }
+    .input-error {
+      color: #e01010;
+      font-size: 0.96rem;
+      margin-top: 2px;
+      min-height: 18px;
+    }
+    .register-info {
+      font-size: 0.98rem;
+      color: #4d5c8a;
+      margin: 8px 0 0 0;
+      line-height: 1.3;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--blue);
+      width: 20px;
+      height: 20px;
+    }
+    .register-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #e6f2ff;
+      transition: background 0.2s;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .register-btn:hover {
+      background: var(--blue-dark);
+    }
+    /* FOOTER */
+    .footer {
+      background: var(--footer-bg);
+      padding: 48px 0 24px 0;
+      margin-top: 64px;
+    }
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 0 24px;
+    }
+    .footer-col {
+      flex: 1 1 220px;
+      min-width: 180px;
+    }
+    .footer-col-logo {
+      flex: 1 1 280px;
+      min-width: 220px;
+    }
+    .footer-logo {
+      height: 48px;
+      margin-bottom: 16px;
+    }
+    .footer-desc {
+      font-size: 1rem;
+      color: var(--blue);
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+    .footer-col h3 {
+      color: var(--blue);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+    }
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+    .footer-col ul li a {
+      color: var(--blue);
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover {
+      color: var(--blue-dark);
+    }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .header-content, .footer-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+      }
+      .footer-col, .footer-col-logo {
+        min-width: 0;
+        width: 100%;
+        text-align: center;
+      }
+      .register-card {
+        padding: 24px 6vw 18px 6vw;
+        border-radius: 12px;
+      }
+      .register-title-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .register-switch {
+        justify-content: center;
+        width: 100%;
+      }
+    }
+    @media (max-width: 600px) {
+      .main-header {
+        padding-top: 18px;
+      }
+      .header-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+      .logo-title {
+        justify-content: center;
+        width: 100%;
+      }
+      .header-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+      }
+      .nav-link, .nav-btn {
+        width: 90vw;
+        max-width: 320px;
+        text-align: center;
+        margin: 0;
+      }
+    }
