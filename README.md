@@ -1,73 +1,140 @@
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# README - Installation Serveur Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Prérequis système
 
-## About Laravel
+- PHP >= 8.1
+- Serveur web (Apache ou Nginx)
+- Base de données (MariaDB/MySQL)
+- Composer
+- Node.js & npm
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Installation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Installation de PHP et extensions
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Sur Ubuntu/Debian :**
+```bash
+sudo apt update
+sudo apt install php php-cli php-mbstring php-xml php-bcmath php-curl php-mysql php-tokenizer php-zip php-json unzip curl
+```
 
-## Learning Laravel
+**Vérifier la version PHP :**
+```bash
+php -v
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Installation du serveur web
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Option A - Apache :**
+```bash
+sudo apt install apache2 libapache2-mod-php
+sudo systemctl start apache2
+sudo systemctl enable apache2
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Option B - Nginx + PHP-FPM :**
+```bash
+sudo apt install nginx php-fpm
+sudo systemctl start nginx
+sudo systemctl enable nginx
+sudo systemctl start php8.1-fpm
+```
 
-## Laravel Sponsors
+### 3. Installation de la base de données
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**MariaDB/MySQL :**
+```bash
+sudo apt install mysql-server
+sudo mysql_secure_installation
+```
 
-### Premium Partners
+### 4. Installation de Composer
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+composer --version
+```
 
-## Contributing
+### 5. Installation de Node.js & npm
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install nodejs
+node -v
+npm -v
+```
 
-## Code of Conduct
+## Configuration du projet Laravel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 1. Créer un nouveau projet
 
-## Security Vulnerabilities
+```bash
+composer create-project laravel/laravel nom_du_projet
+cd nom_du_projet
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Configuration de l'environnement
 
-## License
+```bash
+cp .env.example .env
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
->>>>>>> Stashed changes
-=======
-# CESIZen
->>>>>>> 6e2f954ca696a5d867726cb3a669d705e4205b60
+**Modifier le fichier `.env` :**
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nom_de_la_base
+DB_USERNAME=utilisateur
+DB_PASSWORD=motdepasse
+```
+
+### 3. Installation des dépendances
+
+**Dépendances PHP :**
+```bash
+composer install
+```
+
+**Dépendances front-end :**
+```bash
+npm install
+npm run dev
+```
+
+### 4. Configuration de la base de données
+
+1. Se connecter à MariaDB
+2. Créer une base de données "cesizen"
+3. Configurer le `.env` avec les informations de connexion
+
+### 5. Migrations et lancement
+
+**Créer les tables :**
+```bash
+php artisan migrate
+```
+
+**Lancer le serveur de développement :**
+```bash
+php artisan serve
+```
+
+## Tests
+
+Le serveur sera accessible à l'adresse : `http://localhost:8000`
+
+## Notes importantes
+
+- Assurez-vous que tous les services (Apache/Nginx, MySQL, PHP-FPM si applicable) sont démarrés
+- Vérifiez les permissions sur le répertoire du projet
+- La base de données "cesizen" doit être créée avant de lancer les migrations
+
+## Dépannage
+
+En cas de problème, vérifiez :
+- Les logs Apache/Nginx
+- Les logs PHP
+- La connectivité à la base de données
+- Les permissions de fichiers
