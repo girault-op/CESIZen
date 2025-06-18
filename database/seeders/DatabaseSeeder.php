@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'laurine.girault@gmail.com',
                 'role' => '1',
                 'status' => '1',
-                'email_verified_at' => now(),
+                'pseudo' => 'LaurineG',
                 'remember_token' => Str::random(10),
             ]);
 

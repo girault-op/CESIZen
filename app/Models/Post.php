@@ -8,27 +8,49 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
-    
-    protected $fillable = ['title', 'content', 'picture', 'is_published', 'category_id'];
 
+    protected $fillable = ['title', 'content', 'picture', 'category_id', 'user_id'];
+
+    // Relation avec l'auteur (utilisateur)
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Relation avec la catégorie
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+    // Casts automatiques
+    protected $casts = [
+        'published_at' => 'datetime',
+        'read_time' => 'integer',
+    ];
+
+    /**
+     * Accesseur pour obtenir un temps de lecture par défaut si null
+     */
+    public function getReadTimeAttribute($value)
+    {
+        return $value ?? 5; // 5 minutes par défaut
     }
 
-    // Scope pour récupérer uniquement les articles publiés
+    /**
+     * Accesseur personnalisé pour une date formatée en français (ex: 16 juin 2025)
+     */
+    public function getFormattedDateAttribute()
+    {
+        return $this->published_at
+            ? $this->published_at->locale('fr')->isoFormat('LL')
+            : null;
+    }
+
+    /**
+     * Scope pour ne récupérer que les articles publiés (date passée ou égale)
+     */
     public function scopePublished($query)
     {
-        return $query->where('is_published', 1);
-    }
-
-    // Accesseur pour obtenir l’URL de l’image
-    public function getImageUrlAttribute()
-    {
-        if ($this->picture) {
-            return asset('storage/' . $this->picture);
-        }
-
-        return 'https://source.unsplash.com/random/600x400/?wellness';
+        return $query->where('published_at', '<=', now());
     }
 }

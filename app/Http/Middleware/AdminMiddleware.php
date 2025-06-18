@@ -9,10 +9,12 @@ class AdminMiddleware
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->is_admin) { // Ajuste selon ta logique
-            return $next($request);
+        $user = Auth::user();
+
+        if (!$user || !$user->is_admin || $user->status === 'disabled') {
+            return redirect()->route('dashboard')->with('error', 'Accès réservé aux administrateurs.');
         }
 
-        abort(403, 'Accès refusé.');
+        return $next($request);
     }
 }

@@ -211,10 +211,16 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('users.index', [
-            'users' => User::all()
-        ]);
+        $users = User::all(); // Récupère tous les utilisateurs
+        return view('dashboard', compact('users'));
     }
 
+    public function updateRole(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->role = $request->role; // Met à jour le rôle
+        $user->save();
 
+        return redirect()->route('dashboard')->with('success', 'Rôle mis à jour avec succès.');
+    }
 }

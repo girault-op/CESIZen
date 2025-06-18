@@ -213,15 +213,6 @@ main {
         <div class="cz-form-group">
           <input type="password" name="password" placeholder="Mot de passe*" required>
         </div>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
         <div class="cz-form-group">
           <label for="password_confirmation" class="cz-input-label"></label>
           <input id="password_confirmation" class="cz-text-input block mt-1 w-full" 

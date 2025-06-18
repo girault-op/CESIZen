@@ -250,44 +250,57 @@ button:hover,
       s46:  { inspirationTime: 4, apneaTime: 0, exhalationTime: 6 }
     };
 
-    function doExercise(solution) {
+    function doExercise(solution, repetitions = 3) {
       const mode = modes[solution];
       const currentAction = document.getElementById("current-action");
       const progressBar = document.getElementById("progression");
-      let height = 1;
+      let height = 0;
+      let currentRep = 0;
 
-      let inspirationFrameId = setInterval(doInspiration, 1000);
-      let exhalationFrameId;
+      currentAction.innerText = "Préparez-vous à commencer l'exercice...";
+      setTimeout(() => cycle(), 2000);
 
-      function doInspiration() {
-        currentAction.innerText = "Inspirez...";
-        if (height >= 100) {
-          clearInterval(inspirationFrameId);
-          doApnea();
-        } else {
-          height += (100 / mode.inspirationTime);
-          progressBar.style.height = height + '%';
+      function cycle() {
+        if (currentRep >= repetitions) {
+          currentAction.innerText = "Exercice terminé. Bravo !";
+          return;
         }
+        currentRep++;
+        inspiration();
       }
 
-      function doApnea() {
+      function inspiration() {
+        let t = 0;
+        currentAction.innerText = `Inspirez... (Répétition ${currentRep}/${repetitions})`;
+        const i = setInterval(() => {
+          height += 100 / mode.inspirationTime;
+          progressBar.style.height = height + '%';
+          t++;
+          if (t >= mode.inspirationTime) {
+            clearInterval(i);
+            apnea();
+          }
+        }, 1000);
+      }
+
+      function apnea() {
         currentAction.innerText = "Rétention (apnée)...";
-        setTimeout(() => {
-          height = 100;
-          exhalationFrameId = setInterval(doExhalation, 1000);
-        }, 1000 * mode.apneaTime);
+        setTimeout(() => exhalation(), mode.apneaTime * 1000);
       }
 
-      function doExhalation() {
+      function exhalation() {
+        let t = 0;
         currentAction.innerText = "Expirez...";
-        if (height <= 0) {
-          currentAction.innerText = "Exercice terminé";
-          clearInterval(exhalationFrameId);
-        } else {
-          height -= (100 / mode.exhalationTime);
+        const e = setInterval(() => {
+          height -= 100 / mode.exhalationTime;
           if (height < 0) height = 0;
           progressBar.style.height = height + '%';
-        }
+          t++;
+          if (t >= mode.exhalationTime) {
+            clearInterval(e);
+            setTimeout(() => cycle(), 1000);
+          }
+        }, 1000);
       }
     }
   </script>

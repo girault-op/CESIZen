@@ -113,7 +113,6 @@
 
 <body class="font-sans text-[#0A0F3D]">
     <div class="container mx-auto px-8 lg:px-20"> 
-    <div class="container">
       <!-- Logo et tabs -->
       <header class="main-header">
           <div class="header-content">
@@ -144,22 +143,22 @@
     
         <a href="login.html">Retour à la connexion</a>
       </div>
-      <script>
-        document.getElementById('resetForm').addEventListener('submit', function (e) {
-          e.preventDefault();
-          const message = document.getElementById('successMessage');
-          message.style.display = 'block';
-    
-          // Optionnel : réinitialiser le champ
-          this.reset();
-    
-          // Masquer le message après 5 secondes
-          setTimeout(() => {
-            message.style.display = 'none';
-          }, 5000);
-        });
-      </script>
     </main>
+    <script>
+      document.getElementById('resetForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const message = document.getElementById('successMessage');
+        message.style.display = 'block';
+  
+        // Optionnel : réinitialiser le champ
+        this.reset();
+  
+        // Masquer le message après 5 secondes
+        setTimeout(() => {
+          message.style.display = 'none';
+        }, 5000);
+      });
+    </script>
   <footer class="footer">
     <div class="footer-container">
         <div class="footer-col footer-col-logo">

@@ -17,13 +17,13 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'lastname' => $this->faker->lastName(),
-            'firstname' => $this->faker->firstName(),
-            'role' => $this->faker->randomElement([0, 1, 2]), // Entiers uniquement
-            'status' => $this->faker->randomElement([0, 1]), 
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'lastname' => $this->faker->lastName,
+            'firstname' => $this->faker->firstName,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => bcrypt('password'),
+            'pseudo' => $this->faker->userName, // Ajoutez une valeur pour pseudo
+            'role' => 1,
+            'status' => 1,
             'remember_token' => Str::random(10),
         ];
     }

@@ -22,13 +22,14 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 
 
+
 // Routes pour l'administration
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create'); // 👈 AJOUT
     Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit'); // 👈 AJOUT
-    Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update'); // 👈 AJOUT
+    Route::put('/admin/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
     Route::post('/admin/users/{id}/deactivate', [AdminUserController::class, 'deactivate'])->name('admin.users.deactivate');
     Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
@@ -37,7 +38,42 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/users/{id}/deactivate', [AdminUserController::class, 'deactivate'])->name('users.deactivate');
     Route::post('/users/{id}/activate', [AdminUserController::class, 'activate'])->name('users.activate');
     Route::post('users/{id}/deactivate', [AdminUserController::class, 'deactivate'])->name('users.deactivate');
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::put('/admin/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::get('/admin/users/{id}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::delete('/admin/users/{id}', [AdminUserController::class, 'delete'])->name('admin.users.delete');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('users', AdminUserController::class)->except(['destroy']); // Utilise resource pour les actions CRUD sauf destroy
+    Route::delete('/users/{id}', [AdminUserController::class, 'delete'])->name('users.delete');
+    Route::put('/admin/users/{id}/update-role', [AdminController::class, 'updateUserRole'])->name('admin.users.updateRole');
+
+        // Route pour les articles administratifs
+        Route::resource('posts', AdminPostController::class);
+        // Route pour publier un article
+    Route::post('/posts/{post}/publish', [AdminPostController::class, 'publish'])->name('posts.publish');
+    Route::get('/admin/posts/{id}/edit', [PostController::class, 'edit'])->name('admin.posts.edit');
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
+        Route::put('/posts/{id}', [PostController::class, 'update'])->name('posts.update');
+    });
+});
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('posts', \App\Http\Controllers\Admin\PostController::class);
+});
+
+
+Route::get('/test-mail', function () {
+    try {
+        Mail::raw('Ceci est un test de mail depuis Laravel.', function ($message) {
+            $message->to('votre.email@test.com')
+                    ->subject('Test CESIZEN');
+        });
+        return 'Email envoyé avec succès ✅';
+    } catch (\Exception $e) {
+        return 'Erreur : ' . $e->getMessage();
+    }
 });
 
 Route::get('/', function () {
@@ -50,6 +86,25 @@ Route::prefix('posts')->group(function () {
     Route::get('/{post}', [PostController::class, 'show'])->name('posts.show'); // /posts/{post}
     Route::get('/category/{category}', [PostController::class, 'byCategory'])->name('posts.by_category'); // /posts/category/{category}
     Route::get('/posts', [PostController::class, 'index']); });
+
+// Groupe des routes publiques pour les articles (côté utilisateur)
+Route::prefix('posts')->group(function () {
+    Route::get('/', [PostController::class, 'index'])->name('posts.index'); // /posts
+    Route::get('/{post}', [PostController::class, 'show'])->name('posts.show'); // /posts/{post}
+    Route::get('/category/{category}', [PostController::class, 'byCategory'])->name('posts.by_category'); // /posts/category/{category}
+});
+// Routes pour gérer les articles côté administrateur
+Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index'); // /admin/posts
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit'); // /admin/posts/{post}/edit
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update'); // /admin/posts/{post}
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy'); // /admin/posts/{post}
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('posts', AdminPostController::class);
+});
+
 // Routes pour la gestion des utilisateurs
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');

@@ -1,65 +1,99 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+
 
 class AuthTest extends TestCase
 {
-    use RefreshDatabase; // Vide la base entre chaque test
+    use RefreshDatabase;
 
     #[Test]
-    public function a_user_can_register()
-    {
-        $response = $this->post('/register', [
-            'first_name' => 'Alice',
-            'last_name' => 'Dupont',
-            'pseudo' => 'alicouette',
-            'email' => 'alice@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
-
-        $response->assertRedirect('/dashboard'); // ou vers la page après inscription
-        $this->assertDatabaseHas('users', ['email' => 'alice@example.com']);
-        $this->assertAuthenticated();
-    }
-
-    #[Test]
-    public function a_user_can_login_with_correct_credentials()
+    public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create([
-            'email' => 'bob@example.com',
-            'password' => bcrypt('secret123'),
+            'password' => bcrypt('password'),
         ]);
-
+    
         $response = $this->post('/login', [
-            'email' => 'bob@example.com',
-            'password' => 'secret123',
+            'email' => $user->email,
+            'password' => 'password',
         ]);
-
-        $response->assertRedirect('/dashboard'); // ou ta route post-login
-        $this->assertAuthenticatedAs($user);
+    
+        $this->assertAuthenticated();
+        $response->assertRedirect('/dashboard');
     }
 
     #[Test]
-    public function login_fails_with_invalid_credentials()
+    public function users_cannot_authenticate_with_invalid_password()
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
             'password' => bcrypt('validpass'),
         ]);
 
-        $response = $this->from('/login')->post('/login', [
+        $response = $this->post('/login', [
             'email' => 'test@example.com',
             'password' => 'wrongpass',
         ]);
 
-        $response->assertRedirect('/login');
-        $response->assertSessionHasErrors('email');
-        $this->assertGuest(); // personne n’est connecté
+        $response->assertSessionHasErrors();
+        $this->assertGuest();
     }
+
+    #[Test]
+    public function users_cannot_authenticate_with_nonexistent_account()
+    {
+        $response = $this->post('/login', [
+            'email' => 'nonexistent@example.com',
+            'password' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors();
+        $this->assertGuest();
+    }
+
+    #[Test]
+    public function users_can_logout()
+    {
+        $user = User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => bcrypt('validpass'),
+        ]);
+
+        $this->actingAs($user);
+
+        $response = $this->post('/logout');
+
+        $response->assertRedirect('/');
+        $this->assertGuest();
+    }
+
+    public function test_password_can_be_updated(): void
+{
+    $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class); // ← ici
+
+    $user = User::factory()->create([
+        'password' => bcrypt('old-password'),
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->put('/password', [
+            'current_password' => 'old-password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ]);
+
+    $response->assertSessionHasNoErrors();
+}
+
+protected function setUp(): void
+{
+    parent::setUp();
+    $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
+}
 }

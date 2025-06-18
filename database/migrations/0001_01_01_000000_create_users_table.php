@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('lastname', 100)->nullable();
             $table->string('firstname', 100);
             $table->string('password', 255);
-            $table->string('pseudo', 100)->unique();
-            $table->tinyInteger('role')->default(1)->comment('0 = admin, 1 = user');
-            $table->tinyInteger('status')->default(1)->comment('0 = inactive, 1 = active');
+            $table->string('pseudo')->default('anonymous');
+            $table->boolean('role')->default(false); // false pour utilisateur normal, true pour admin
+            $table->string('status')->default('active'); // Statut par défaut
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable(); // Ajout de la colonne
             $table->rememberToken(); // Pour la fonctionnalité "Se souvenir de moi"

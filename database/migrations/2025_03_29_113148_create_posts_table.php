@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255);
+            $table->string('title', 255); // Titre de l'article
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Auteur de l'article
             $table->text('content'); // Contenu riche
             $table->string('picture', 255)->nullable(); // URL ou chemin de l'image principale
             $table->tinyInteger('is_published')->default(0); // Booléen pour la publication

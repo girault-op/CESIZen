@@ -9,15 +9,54 @@
   <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/footer.css">
   <style>
-</head>
+.admin-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #28a745; /* vert */
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.admin-button:hover {
+    background-color: #218838;
+}
+
+header {
+  padding: 2rem 0;
+  background: #fff;
+  text-align: center;
+}
+
+main {
+  margin-top: 2rem; /* espace entre le header et le contenu */
+  margin-bottom: 2rem; /* espace entre le contenu et le footer */
+}
+
+footer {
+  padding: 2rem 0;
+  text-align: center;
+}
 
 body {
     font-family: 'Filson Pro', sans-serif;
+    margin: auto;
+    padding: auto;
 }
 
 .profile-container {
     display: flex;
     margin: 40px;
+    margin-top: 60px; /* espace après le header */
+    margin-bottom: 60px; /* espace avant le footer */
+}
+
+.profile-main-wrapper {
+  margin: 60px 0;
 }
 
 .sidebar {
@@ -152,7 +191,7 @@ body {
 }
 
 .user-name {
-    font-weight: 
+    font-weight: bold;
 }
 
 .user-pseudo {
@@ -334,16 +373,26 @@ body {
                 $sidebarAvatarPath = $isSidebarAvatarExternal ? $user->avatar : asset('storage/' . $user->avatar);
             @endphp
             <img src="{{ $sidebarAvatarPath }}" alt="Avatar de {{ $user->pseudo }}" class="user-avatar_">
-            
-                <h2>Bienvenue, {{ $user->pseudo }}</h2>
+            <br>
+            <p class="welcome-message">Bienvenue, <strong>{{ $user->pseudo }}</strong></p>
+
             </div>
             <nav>
                 <a href="#" class="sidebar-link">Mes informations personnelles</a>
-                <a href="posts" class="sidebar-link">Accéder aux articles</a>
-                <a href="breathing-modes" class="sidebar-link">Accéder à l’exercice de cohérence cardiaque</a>
+            
+                <a href="{{ url('posts') }}" class="sidebar-link">Accéder aux articles</a>
+                <a href="{{ url('breathing-modes') }}" class="sidebar-link">Accéder à l’exercice de cohérence cardiaque</a>
+             
+                @if(Auth::user()->role)
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-primary sidebar-link back-office-link">
+                    <span class="icon-lock" style="margin-right: 5px;">🔒</span>
+                    Accès au Back Office
+                </a>
+            @endif
+            
                 <form method="POST" action="{{ route('logout') }}" class="sidebar-link logout" style="display: inline;">
                     @csrf
-                    <button class="deconnect" type="submit" style="background: none; border: none; color: inherit; font: inherit; cursor: pointer;">
+                    <button type="submit" class="deconnect">
                         Se déconnecter
                     </button>
                 </form>
@@ -357,33 +406,41 @@ body {
                     <p><strong>Membre depuis :</strong> {{ $user->created_at->format('F Y') }}</p>
                 @else
                     <p><strong>Membre depuis :</strong> Non disponible</p>
+                @endif            
+                <p>Statut : 
+                    @if(Auth::user()->status === 'active')
+                    <span class="text-green-600 font-semibold">Actif</span>
+                @elseif(Auth::user()->status === 'inactive')
+                    <span class="text-gray-600 font-semibold">Inactif</span>
+                @elseif(Auth::user()->status === 'suspended')
+                    <span class="text-yellow-600 font-semibold">Suspendu</span>
                 @endif
-                <p><strong>Statut :</strong> 
-                    @if (Auth::check())
-                        <span class="online-status">En ligne ●</span>
-                    @else
-                        <span class="offline-status">Hors ligne</span>
-                    @endif
                 </p>
                 
                 <!-- Affichage des informations personnelles -->
                 <div class="info-grid">
-                    <div><strong>Nom :</strong> {{ $user->lastname }}</div>
-                    <div><strong>Adresse mail :</strong> {{ $user->email }}</div>
-                    <div><strong>Prénom :</strong> {{ $user->firstname }}</div>
-                    <div><strong>Pseudo :</strong> <span class="pseudo-highlight">{{ $user->pseudo }}</span></div>
-                    <div><strong>Rôle :</strong> {{ $user->role }}</div>
+                    <div><strong>Nom :</strong> {{ $user->lastname ?? 'Non disponible' }}</div>
+                    <div><strong>Adresse mail :</strong> {{ $user->email ?? 'Non disponible' }}</div>
+                    <div><strong>Prénom :</strong> {{ $user->firstname ?? 'Non disponible' }}</div>
+                    <div><strong>Pseudo :</strong> <span class="pseudo-highlight">{{ $user->pseudo ?? 'Non disponible' }}</span></div>
+                    <div>
+                        <strong>Rôle :</strong>
+                        @if(Auth::user()->role)
+                            <span class="text-red-600 font-semibold">Administrateur</span>
+                        @else
+                            <span class="text-blue-600 font-semibold">Utilisateur</span>
+                        @endif
+                    </div>
+
+                    <!-- Debug temporaire -->
                     <div><strong>Mot de passe :</strong> ********</div>
                     <div><strong>Avatar :</strong><br>
                         @php
-    $isAvatarExternal = Str::startsWith($user->avatar, 'http');
-    $avatarPath = $isAvatarExternal ? $user->avatar : asset('storage/' . $user->avatar);
-@endphp
-<img src="{{ $avatarPath }}" class="user-avatar-small" alt="Avatar de {{ $user->pseudo }}">
-
+                            $isAvatarExternal = isset($user->avatar) && Str::startsWith($user->avatar, 'http');
+                            $avatarPath = $isAvatarExternal ? $user->avatar : asset('storage/' . ($user->avatar ?? 'default-avatar.png'));
+                        @endphp
+                        <img src="{{ $avatarPath }}" class="user-avatar-small" alt="Avatar de {{ $user->pseudo ?? 'Utilisateur' }}">
                     </div>
-                </div>
-        
                 <!-- Boutons d'action -->
                 <div class="buttons">
                     <button class="btn-primary" id="edit-profile-btn">Modifier mon profil</button>
@@ -478,52 +535,6 @@ body {
         </div>
     </section>
 </main>
-<section class="mt-12">
-    <h2>Statistiques cohérence cardiaque</h2>
-    <p>Nombre total de sessions : {{ $totalSessions }}</p>
-    <p>Durée totale : {{ $totalDuration }} secondes</p>
-
-    @if($lastSession)
-      <p>Dernière session : {{ $lastSession->created_at->diffForHumans() }}</p>
-    @endif
-
-    <h3>Par mode :</h3>
-    <ul>
-      @foreach ($sessionsByMode as $stat)
-        <li>{{ $stat->mode->label }} : {{ $stat->total }} sessions</li>
-      @endforeach
-    </ul>
-
-    <h3>Évolution mensuelle :</h3>
-    <canvas id="monthlySessionsChart" width="400" height="200"></canvas>
-    <!-- Chart.js d'abord -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- Ensuite ton script -->
-<script>
-  const ctx = document.getElementById('monthlySessionsChart').getContext('2d');
-  const chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: @json($sessionsByMonth->pluck('month')),
-      datasets: [{
-        label: 'Sessions par mois',
-        data: @json($sessionsByMonth->pluck('total')),
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-</script>
-  </section>
 
       <footer class="footer">
         <div class="footer-container">

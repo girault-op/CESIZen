@@ -37,6 +37,7 @@ class ProfileController extends Controller
     public function dashboard(): View
     {
     $user = Auth::user();
+    $user->refresh(); // rafraîchir les données de l'utilisateur
 
     // Statistiques globales
     $totalSessions = BreathingSession::where('user_id', $user->id)->count();
@@ -247,4 +248,13 @@ class ProfileController extends Controller
             'sessionsByMonth'
         ));
     }
+
+    public function profile(): View
+{
+    $user = Auth::user();
+    $user->refresh(); // Actualise les données de l'utilisateur depuis la base de données
+
+    return view('profile', compact('user'));
 }
+}
+

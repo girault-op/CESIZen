@@ -79,22 +79,21 @@ class UserController extends Controller
     {
         return view('admin.users.edit', compact('user'));
     }
-    // Mise à jour d'un utilisateur
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
+        $user = User::findOrFail($id);
+    
+        // Valider les données
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:user,admin'
+            'role' => 'required|integer',
         ]);
-
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role
-        ]);
-
-        return redirect()->route('admin.users.index')
-                        ->with('success', 'Utilisateur mis à jour avec succès');
+    
+        // Mettre à jour le rôle
+        $user->role = $request->input('role');
+        $user->save();
+    
+        return redirect()->route('dashboard')->with('success', 'Rôle mis à jour avec succès.');
     }
+
+
 }
