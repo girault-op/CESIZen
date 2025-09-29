@@ -34,6 +34,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: List files
+      run: ls -la
+
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -42,21 +45,21 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist
-      working-directory: cesizen
+      working-directory: ./cesizen
 
     - name: Set up environment
       run: |
-        cp cesizen/.env.example cesizen/.env
-        php cesizen/artisan key:generate
-      working-directory: cesizen
+        cp .env.example .env
+        php artisan key:generate
+      working-directory: ./cesizen
 
     - name: Run migrations
-      run: php cesizen/artisan migrate --force --env=testing
-      working-directory: cesizen
+      run: php artisan migrate --force --env=testing
+      working-directory: ./cesizen
 
     - name: Run tests
-      run: php cesizen/artisan test --env=testing
-      working-directory: cesizen
+      run: php artisan test --env=testing
+      working-directory: ./cesizen
 
   deploy:
     runs-on: ubuntu-latest
