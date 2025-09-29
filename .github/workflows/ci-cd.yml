@@ -3,14 +3,14 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - dev
-      - re7
-      - prod
+      - develop
+      - trunk
+      - master
   pull_request:
     branches:
-      - dev
-      - re7
-      - prod
+      - develop
+      - trunk
+      - master
 
 jobs:
   # Job 1 : Exécuter les tests
@@ -50,10 +50,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Deploy to environment
-      if: github.ref == 'refs/heads/prod' || github.ref == 'refs/heads/re7'
+    - name: Deploy to develop environment
+      if: github.ref == 'refs/heads/develop'
       run: |
-        echo "Déploiement en cours pour la branche ${{ github.ref_name }}..."
-        # Ajoutez ici vos commandes de déploiement, par exemple :
-        # - Déploiement sur un serveur via SSH
-        # - Déploiement sur un service cloud (AWS, Azure, etc.)
+        echo "Déploiement en cours pour l'environnement DEVELOP..."
+        # Ajoutez ici vos commandes de déploiement pour l'environnement develop
+
+    - name: Deploy to re7 environment
+      if: github.ref == 'refs/heads/trunk'
+      run: |
+        echo "Déploiement en cours pour l'environnement RE7..."
+        # Ajoutez ici vos commandes de déploiement pour l'environnement re7
+
+    - name: Deploy to production environment
+      if: github.ref == 'refs/heads/master'
+      run: |
+        echo "Déploiement en cours pour l'environnement PROD..."
+        # Ajoutez ici vos commandes de déploiement pour l'environnement prod
