@@ -42,21 +42,17 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist
-      working-directory: ./cesizen
 
     - name: Set up environment
       run: |
         cp .env.example .env
         php artisan key:generate
-      working-directory: ./cesizen
 
     - name: Run migrations
       run: php artisan migrate --force --env=testing
-      working-directory: ./cesizen
 
     - name: Run tests
       run: php artisan test --env=testing
-      working-directory: ./cesizen
 
   deploy:
     runs-on: ubuntu-latest
@@ -77,3 +73,4 @@ jobs:
     - name: Deploy to production environment
       if: github.ref == 'refs/heads/master'
       run: echo "Déploiement en cours pour l'environnement PROD..."
+
