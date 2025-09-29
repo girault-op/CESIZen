@@ -1,0 +1,97 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+      - trunk
+      - master
+  pull_request:
+    branches:
+      - develop
+      - trunk
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: List files
+      run: ls -la
+
+    - name: Install dependencies
+      run: composer install --prefer-dist
+      working-directory: ./cesizen
+
+    - name: Run tests
+      run: php artisan test --env=testing
+      working-directory: ./cesizen
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: cesizen_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: List files
+      run: ls -la
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, pdo_mysql, bcmath
+
+    - name: Install dependencies
+      run: composer install --prefer-dist
+      working-directory: ./cesizen
+
+    - name: Set up environment
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+      working-directory: ./cesizen
+
+    - name: Run migrations
+      run: php artisan migrate --force --env=testing
+      working-directory: ./cesizen
+
+    - name: Run tests
+      run: php artisan test --env=testing
+      working-directory: ./cesizen
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to develop environment
+      if: github.ref == 'refs/heads/develop'
+      run: echo "Déploiement en cours pour l'environnement DEVELOP..."
+
+    - name: Deploy to re7 environment
+      if: github.ref == 'refs/heads/trunk'
+      run: echo "Déploiement en cours pour l'environnement RE7..."
+
+    - name: Deploy to production environment
+      if: github.ref == 'refs/heads/master'
+      run: echo "Déploiement en cours pour l'environnement PROD..."
